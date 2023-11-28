@@ -1,0 +1,65 @@
+<!-- add_marks.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Marks</title>
+</head>
+<body>
+    <h2>Add Marks</h2>
+    <form id="addMarksForm">
+        <label for="studentRoll">Student Roll:</label>
+        <input type="text" id="studentRoll" name="studentRoll" required>
+        <br>
+        <label for="subjectName">Subject Name:</label>
+        <input type="text" id="subjectName" name="subjectName" required>
+        <br>
+        <label for="totalMarks">Total Marks:</label>
+        <input type="number" id="totalMarks" name="totalMarks" required>
+        <br>
+        <button type="button" onclick="addMarks()">Add Marks</button>
+    </form>
+
+    <script>
+        function addMarks() {
+            const studentRoll = document.getElementById('studentRoll').value;
+            const subjectName = document.getElementById('subjectName').value;
+            const totalMarks = document.getElementById('totalMarks').value;
+
+            if (!studentRoll || !subjectName || !totalMarks) {
+                console.error('Invalid data. Please provide student roll, subject name, and total marks.');
+                return;
+            }
+
+            // Make API call to add marks
+            fetch('http://localhost:8000/api/add-marks/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    student: { roll_number: studentRoll },
+                    subject: { name: subjectName },
+                    total_marks: totalMarks,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add marks. Please check your data.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Marks added successfully:', data);
+
+                // Reset the form to clear entered data
+                document.getElementById('addMarksForm').reset();
+            })
+            .catch(error => {
+                console.error('Error adding marks:', error.message);
+            });
+        }
+    </script>
+</body>
+</html>

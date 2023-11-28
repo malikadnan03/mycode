@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Rank Page</title>
+</head>
+<body>
+    <h1>Student Rank</h1>
+
+    <div id="rankList"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch the student ranks from the API
+            fetch('http://127.0.0.1:8000/api/calculate-rank/')
+                .then(response => response.json())
+                .then(data => {
+                    // Display the student ranks on the page
+                    displayRanks(data.rank_data);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+        function displayRanks(ranks) {
+            const rankList = document.getElementById('rankList');
+
+            if (ranks.length === 0) {
+                rankList.innerHTML = '<p>No data available.</p>';
+                return;
+            }
+
+            // Create a table to display the ranks
+            const table = document.createElement('table');
+            table.innerHTML = '<tr><th>Rank</th><th>Student ID</th><th>Total Marks</th></tr>';
+
+            // Populate the table with rank data
+            ranks.forEach(rank => {
+                const row = table.insertRow();
+                row.insertCell(0).innerText = rank.rank;
+                row.insertCell(1).innerText = rank.student_id;
+                row.insertCell(2).innerText = rank.total_marks;
+            });
+
+            // Append the table to the rankList div
+            rankList.appendChild(table);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!-- student/templates/add_student.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Student</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <h2>Add Student</h2>
+    <form id="addStudentForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="roll_number">Roll Number:</label>
+        <input type="text" id="roll_number" name="roll_number" required><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            $('#addStudentForm').submit(function(e) {
+                e.preventDefault();
+
+                const name = $('#name').val();
+                const rollNumber = $('#roll_number').val();
+
+                if (!name || !rollNumber) {
+                    console.error('Invalid data. Please provide name and roll number.');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/add-student/',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: name,
+                        roll_number: rollNumber
+                    }),
+                    success: function(data) {
+                        console.log('Success:', data);
+
+                        // Reset the form to clear entered data
+                        $('#addStudentForm')[0].reset();
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

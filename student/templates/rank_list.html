@@ -1,0 +1,31 @@
+<!-- student/templates/rank_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rank List</title>
+</head>
+<body>
+    <h1>Rank List</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Roll Number</th>
+                <th>Total Marks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in rank_data %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ data.roll_number }}</td>
+                    <td>{{ data.total_marks }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

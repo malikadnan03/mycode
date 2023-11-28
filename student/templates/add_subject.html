@@ -1,0 +1,52 @@
+<!-- add_subject.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subject</title>
+</head>
+<body>
+    <h2>Add Subject</h2>
+    <form id="addSubjectForm">
+        <label for="subjectName">Subject Name:</label>
+        <input type="text" id="subjectName" name="subjectName" required>
+        <button type="submit">Add Subject</button>
+    </form>
+
+    <div id="inputPanel">
+        <!-- Display entered data here -->
+    </div>
+
+    <script>
+        document.getElementById('addSubjectForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const subjectName = document.getElementById('subjectName').value;
+ 
+            // Make API call to add subject
+            fetch('http://localhost:8000/api/add-subject/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: subjectName }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Subject added successfully:', data);
+
+                // Clear the input panel (you can customize this)
+                document.getElementById('inputPanel').innerHTML = '';
+
+                // Reset the form to clear entered data
+                document.getElementById('addSubjectForm').reset();
+            })
+            .catch(error => {
+                console.error('Error adding subject:', error);
+            });
+        });
+    
+    </script>
+</body>
+</html>

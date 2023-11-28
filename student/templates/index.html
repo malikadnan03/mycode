@@ -1,0 +1,34 @@
+<!-- student/templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Data</title>
+</head>               
+<body>
+    <h1>Student Data</h1>
+
+    <!-- Navigation links -->
+    <ul   >
+        <li><a href="/add-student/">Add Student</a></li>
+        <li><a href="/add-subject/">Add Subject</a></li>
+        <li><a href="/add-marks/">Add Marks</a></li>
+    </ul>
+
+    <!-- Display content based on the selected option -->
+    <div id="content"></div>
+
+    <script>
+        // Function to load content based on the selected option
+        function loadContent(url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('content').innerHTML = data;
+                })
+                .catch(error => console.error('Error fetching content:', error));
+        }
+    </script>
+</body>
+</html>
