@@ -1,16 +1,21 @@
-# student/urls.py
-from django.urls import path
-from .views import AddStudentFormView, AddSubjectFormView, AddMarksFormView, StudentAPIView, SubjectAPIView, MarksAPIView, JSONDataView, RankAPIView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import StudentViewSet, SubjectViewSet, MarksViewSet, JSONDataViewSet, RankViewSet
 
 app_name = 'student'
 
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+router.register(r'students', StudentViewSet, basename='students')
+router.register(r'subjects', SubjectViewSet, basename='subjects')
+router.register(r'marks', MarksViewSet, basename='marks')
+router.register(r'json-data', JSONDataViewSet, basename='json-data')
+router.register(r'rank', RankViewSet, basename='rank')
+ 
 urlpatterns = [
-    path('add-student-form/', AddStudentFormView.as_view(), name='add-student-form'),
-    path('add-subject-form/', AddSubjectFormView.as_view(), name='add-subject-form'),
-    path('add-marks-form/', AddMarksFormView.as_view(), name='add-marks-form'),
-    path('add-student/', StudentAPIView.as_view(), name='add-student'),
-    path('add-subject/', SubjectAPIView.as_view(), name='add-subject'),
-    path('add-marks/', MarksAPIView.as_view(), name='add-marks'),
-    path('json-data/', JSONDataView.as_view(), name='json-data'),
-    path('calculate-rank/', RankAPIView.as_view(), name='calculate-rank'),  # Add this line for the RankAPIView
+    path('', include(router.urls)),
+    # Add the following lines for the Add views
+    path('add-student/', StudentViewSet.as_view({'post': 'create'}), name='add-student'),
+    path('add-subject/', SubjectViewSet.as_view({'post': 'create'}), name='add-subject'),
+    path('add-marks/', MarksViewSet.as_view({'post': 'create'}), name='add-marks'),
 ]

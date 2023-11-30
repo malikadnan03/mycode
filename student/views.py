@@ -1,51 +1,24 @@
-from django.views import View
-from django.shortcuts import render
-from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from .models import Student, Subject, Marks
 from .serializers import StudentSerializer, SubjectSerializer, MarksSerializer
 
-#@method_decorator(csrf_exempt, name='dispatch')
-class AddStudentFormView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'add_student.html')
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
 
-#@method_decorator(csrf_exempt, name='dispatch')
-class AddSubjectFormView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'add_subject.html')
+class SubjectViewSet(viewsets.ModelViewSet):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
 
-#@method_decorator(csrf_exempt, name='dispatch')
-class AddMarksFormView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'add_marks.html')
+class MarksViewSet(viewsets.ModelViewSet):
+    queryset = Marks.objects.all()
+    serializer_class = MarksSerializer
 
-#@method_decorator(csrf_exempt, name='dispatch')
-class StudentAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#@method_decorator(csrf_exempt, name='dispatch')
-class SubjectAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = SubjectSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#@method_decorator(csrf_exempt, name='dispatch')
-class MarksAPIView(APIView):
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         try:
             student_roll = request.data.get('student', {}).get('roll_number')
             subject_name = request.data.get('subject', {}).get('name')
@@ -77,9 +50,8 @@ class MarksAPIView(APIView):
             print('Exception:', str(e))
             return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class JSONDataView(APIView):
-    def get(self, request, *args, **kwargs):
+class JSONDataViewSet(viewsets.ViewSet):
+    def list(self, request):
         students = Student.objects.all()
         subjects = Subject.objects.all()
         marks_data = []
@@ -95,9 +67,8 @@ class JSONDataView(APIView):
                          'subjects': SubjectSerializer(subjects, many=True).data,
                          'marks_data': marks_data})
 
-#@method_decorator(csrf_exempt, name='dispatch')
-class RankAPIView(APIView):
-    def get(self, request, *args, **kwargs):
+class RankViewSet(viewsets.ViewSet):
+    def list(self, request):
         try:
             students = Student.objects.all()
             ranks = []
@@ -125,3 +96,4 @@ class RankAPIView(APIView):
         except Exception as e:
             print('Exception:', str(e))
             return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+      
