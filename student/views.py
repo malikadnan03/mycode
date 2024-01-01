@@ -78,7 +78,8 @@ class RankViewSet(viewsets.ViewSet):
             )['total_marks'], reverse=True)
 
             prev_total_marks = None
-            current_rank = 0
+            current_rank = 0 
+            current_rank +1
 
             for student in sorted_students:
                 total_marks = Marks.objects.filter(student=student).aggregate(
@@ -96,4 +97,3 @@ class RankViewSet(viewsets.ViewSet):
         except Exception as e:
             print('Exception:', str(e))
             return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-      
